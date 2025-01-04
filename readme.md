@@ -1,9 +1,13 @@
 # wilmslow -- messing with finite state machines
 
+## latest
+
+ - random events
+ - events Up, Down
+
 ## next steps
 
- - events Up, Down
- - random events
+ - random events with user supplied rng
  - functions to model states low, high
  - add terminal state
  - compare states i.e. functions for equality
@@ -12,5 +16,10 @@
 
 and at some point some logging
 
+## `cargo add ...`
+
+```sh
+cargo add rand
+```
 
 ### end
