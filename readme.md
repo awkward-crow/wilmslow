@@ -2,6 +2,7 @@
 
 ## latest
 
+ - random events with user supplied rng -- needs tidying up!!
  - random events
  - events Up, Down
 
@@ -20,6 +21,7 @@ and at some point some logging
 
 ```sh
 cargo add rand
+cargo add rand_xoshiro
 ```
 
 ### end
