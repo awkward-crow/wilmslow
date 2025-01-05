@@ -2,13 +2,12 @@
 
 ## latest
 
- - random events with user supplied rng -- needs tidying up!!
+ - random events with user supplied rng
  - random events
  - events Up, Down
 
 ## next steps
 
- - random events with user supplied rng
  - functions to model states low, high
  - add terminal state
  - compare states i.e. functions for equality
@@ -16,6 +15,20 @@
  - optional internal events e.g. scheduler with restarts
 
 and at some point some logging
+
+## random events
+
+Using `rand::random`
+
+```rust
+let u = rand::random::<E>();
+println!("{:?}", u);
+
+for _ in 1..10 {
+    let v: E = rand::random();
+    println!("{:?}", v);
+}
+```
 
 ## `cargo add ...`
 
