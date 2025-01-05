@@ -1,9 +1,42 @@
 // main.rs
 
+
 #[derive(Debug)]
 enum E {
     Up,
     Down,
+}
+
+
+struct F {
+    t: T
+}
+
+
+struct T (fn(&mut F, &E) -> T);
+
+impl F {
+    fn low(&mut self, e: &E) -> T {
+        println!("low: {:?}", e);
+        match e {
+            E::Up => T(Self::high),
+            E::Down => T(Self::low)
+        }
+    }
+
+    fn high(&mut self, e: &E) -> T {
+        println!("high: {:?}", e);
+        match e {
+            E::Up => T(Self::high),
+            E::Down => T(Self::low)
+        }
+    }
+
+    fn handle(&mut self, e: &E) -> bool {
+        let T(phi) = self.t;
+        self.t = phi(self, e);
+        true
+    }
 }
 
 // random choice of events E, see https://stackoverflow.com/questions/48490049/how-do-i-choose-a-random-value-from-an-enum
@@ -22,26 +55,11 @@ impl Distribution<E> for Standard {
     }
 }
 
-use rand_xoshiro::rand_core::SeedableRng;
-use rand_xoshiro::Xoshiro256PlusPlus;
-
 fn main() {
-    println!("{:?}", E::Up);
+    let mut a = F { t: T(F::low) };
 
-    let u = rand::random::<E>();
-    println!("{:?}", u);
-
-    for _ in 1..10 {
-        let v: E = rand::random();
-        println!("{:?}", v);
-    }
-
-    let seed: u64 = 4033;
-    let mut omega = Xoshiro256PlusPlus::seed_from_u64(seed);
-
-    for _ in 1..10 {
-        let u = omega.gen::<E>();
-        println!("{:?}", u);
+    for e in [E::Down, E::Up, E::Up, E::Down, E::Down] {
+        a.handle(&e);
     }
 
     println!("ok");

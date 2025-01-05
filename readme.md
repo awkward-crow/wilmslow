@@ -16,6 +16,10 @@
 
 and at some point some logging
 
+## functions as states
+
+see https://github.com/nlfiedler/shiranui/blob/master/src/lexer.rs for use of struct containing a function for states
+
 ## random events
 
 Using `rand::random`
@@ -27,6 +31,21 @@ println!("{:?}", u);
 for _ in 1..10 {
     let v: E = rand::random();
     println!("{:?}", v);
+}
+```
+
+Or, with a custom rng,
+
+```rust
+use rand_xoshiro::rand_core::SeedableRng;
+use rand_xoshiro::Xoshiro256PlusPlus;
+
+let seed: u64 = 4033;
+let mut omega = Xoshiro256PlusPlus::seed_from_u64(seed);
+
+for _ in 1..10 {
+    let u = omega.gen::<E>();
+    println!("{:?}", u);
 }
 ```
 
