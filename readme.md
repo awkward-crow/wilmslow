@@ -2,6 +2,7 @@
 
 ## latest
 
+ - add terminal state 
  - count for time spent in state high and with events generated at random
  - functions to model states low, high
  - random events with user supplied rng
@@ -10,7 +11,6 @@
 
 ## next steps
 
- - add terminal state 
  - compare states i.e. functions for equality
  - state_name : states -> &str
  - optional internal events e.g. scheduler with restarts

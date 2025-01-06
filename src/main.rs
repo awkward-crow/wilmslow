@@ -18,7 +18,7 @@ struct T (fn(&mut F, &E) -> T);
 
 impl F {
     fn low(&mut self, e: &E) -> T {
-        println!(" low: {:?}", e);
+        println!("     low: {:?}", e);
         match e {
             E::Up => T(Self::high),
             E::Down => T(Self::low)
@@ -26,17 +26,27 @@ impl F {
     }
 
     fn high(&mut self, e: &E) -> T {
-        println!("high: (k: {}) {:?}", self.k, e);
+        println!("    high: (k: {}) {:?}", self.k, e);
+        const MAX_K: i32 = 2;
         match e {
             E::Up => {
                 self.k += 1;
-                T(Self::high)
+                if self.k > MAX_K {
+                    T(Self::terminal)
+                } else {
+                    T(Self::high)
+                }
             },
             E::Down => {
                 self.k = 0;
                 T(Self::low)
             }
         }
+    }
+
+    fn terminal(&mut self, e: &E) -> T {
+        println!("terminal: {:?}", e);
+        T(Self::terminal)
     }
 
     fn handle(&mut self, e: &E) -> bool {
@@ -69,7 +79,7 @@ use rand_xoshiro::Xoshiro256PlusPlus;
 fn main() {
     let mut a = F { k: 0, t: T(F::low) };
 
-    for e in [E::Down, E::Up, E::Up, E::Down, E::Down] {
+    for e in [E::Up, E::Up, E::Up, E::Up, E::Down, E::Down, E::Up] {
         a.handle(&e);
     }
 
