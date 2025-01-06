@@ -49,6 +49,11 @@ impl F {
         T(Self::terminal)
     }
 
+    fn is_terminal(&self) -> bool {
+        let T(phi) = self.t;
+        phi == Self::terminal
+    }
+
     fn handle(&mut self, e: &E) -> bool {
         let T(phi) = self.t;
         self.t = phi(self, e);
@@ -79,19 +84,16 @@ use rand_xoshiro::Xoshiro256PlusPlus;
 fn main() {
     let mut a = F { k: 0, t: T(F::low) };
 
-    for e in [E::Up, E::Up, E::Up, E::Up, E::Down, E::Down, E::Up] {
-        a.handle(&e);
-    }
-
-    println!("and ...");
-
     let seed: u64 = 704033;
     let mut omega = Xoshiro256PlusPlus::seed_from_u64(seed);
 
-    for _ in 1..10 {
-        let u = omega.gen::<E>();
-        a.handle(&u);
+    for _ in 1..40 {
+        if !a.is_terminal() {
+            let u = omega.gen::<E>();
+            a.handle(&u);
+        }
     }
+    println!("a.is_terminal() is {}", a.is_terminal());
     
     println!("ok");
 }

@@ -2,7 +2,7 @@
 
 ## latest
 
- - add terminal state 
+ - add terminal state and is_terminal() 
  - count for time spent in state high and with events generated at random
  - functions to model states low, high
  - random events with user supplied rng
@@ -11,11 +11,10 @@
 
 ## next steps
 
- - compare states i.e. functions for equality
  - state_name : states -> &str
  - optional internal events e.g. scheduler with restarts
 
-and at some point some logging
+and at some point some logging and **testing**
 
 ## functions as states
 
@@ -56,5 +55,16 @@ for _ in 1..10 {
 cargo add rand
 cargo add rand_xoshiro
 ```
+
+## terminal state
+
+```rust
+let mut a = F { k: 0, t: T(F::low) };
+
+for e in [E::Up, E::Up, E::Up, E::Up, E::Down, E::Down, E::Up] {
+    a.handle(&e);
+}
+```
+ 
 
 ### end
