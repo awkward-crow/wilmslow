@@ -2,6 +2,7 @@
 
 ## latest
 
+ - state: states -> &str
  - add terminal state and is_terminal() 
  - count for time spent in state high and with events generated at random
  - functions to model states low, high
@@ -11,7 +12,6 @@
 
 ## next steps
 
- - state_name : states -> &str
  - optional internal events e.g. scheduler with restarts
 
 and at some point some logging and **testing**

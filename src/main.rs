@@ -59,6 +59,19 @@ impl F {
         self.t = phi(self, e);
         true
     }
+
+    fn state(&self) -> &str {
+        let T(phi) = self.t;
+        if phi == Self::low {
+            "low"
+        } else if phi == Self::high {
+            "high"
+        } else if phi == Self::terminal {
+            "terminal"
+        } else {
+            "unknown"
+        }
+    }
 }
 
 // random choice of events E, see https://stackoverflow.com/questions/48490049/how-do-i-choose-a-random-value-from-an-enum
@@ -83,6 +96,7 @@ use rand_xoshiro::Xoshiro256PlusPlus;
 
 fn main() {
     let mut a = F { k: 0, t: T(F::low) };
+    println!("a.state is {}", a.state());
 
     let seed: u64 = 704033;
     let mut omega = Xoshiro256PlusPlus::seed_from_u64(seed);
@@ -93,6 +107,7 @@ fn main() {
             a.handle(&u);
         }
     }
+    println!("a.state is {}", a.state());
     println!("a.is_terminal() is {}", a.is_terminal());
     
     println!("ok");
