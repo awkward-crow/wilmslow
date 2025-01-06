@@ -17,6 +17,10 @@ struct F {
 struct T (fn(&mut F, &E) -> T);
 
 impl F {
+    fn new() -> Self {
+        Self { k: 0, t: T(Self::low) }
+    }
+
     fn low(&mut self, e: &E) -> T {
         println!("     low: {:?}", e);
         match e {
@@ -95,7 +99,7 @@ use rand_xoshiro::Xoshiro256PlusPlus;
 
 
 fn main() {
-    let mut a = F { k: 0, t: T(F::low) };
+    let mut a = F::new(); 
     println!("a.state is {}", a.state());
 
     let seed: u64 = 704033;
