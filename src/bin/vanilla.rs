@@ -1,31 +1,31 @@
 // main.rs
 
-
 #[derive(Debug)]
 enum E {
     Up,
     Down,
 }
 
-
 struct F {
     k: i32,
-    t: T
+    t: T,
 }
 
-
-struct T (fn(&mut F, &E) -> T);
+struct T(fn(&mut F, &E) -> T);
 
 impl F {
     fn new() -> Self {
-        Self { k: 0, t: T(Self::low) }
+        Self {
+            k: 0,
+            t: T(Self::low),
+        }
     }
 
     fn low(&mut self, e: &E) -> T {
         println!("     low: {:?}", e);
         match e {
             E::Up => T(Self::high),
-            E::Down => T(Self::low)
+            E::Down => T(Self::low),
         }
     }
 
@@ -40,7 +40,7 @@ impl F {
                 } else {
                     T(Self::high)
                 }
-            },
+            }
             E::Down => {
                 self.k = 0;
                 T(Self::low)
@@ -97,9 +97,8 @@ impl Distribution<E> for Standard {
 use rand_xoshiro::rand_core::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-
 fn main() {
-    let mut a = F::new(); 
+    let mut a = F::new();
     println!("a.state is {}", a.state());
 
     let seed: u64 = 704033;
@@ -113,7 +112,7 @@ fn main() {
     }
     println!("a.state is {}", a.state());
     println!("a.is_terminal() is {}", a.is_terminal());
-    
+
     println!("ok");
 }
 

@@ -2,6 +2,27 @@
 
 ## latest
 
+ - state running goes back to init with a `start` event
+ - states running, complete and failed
+ - optional internal events i.e. transition functions are wrapped in struct T, 
+
+        struct T (fn(&mut F, &E) -> (Option<E>, T));
+
+    and states have a signature like this
+
+        fn init(&mut self, e: &E) -> (Option<E>, T) {
+        
+ - convert string (read from input) to enum value, `use std::str::FromStr;`
+
+ - move previous main.rs to bin/vanilla.rs
+
+## next steps (bin/cox.rs)
+
+ - logging 
+ - **testing**
+
+## previous (now bin/vanilla.rs)
+
  - state: states -> &str
  - add terminal state and is_terminal() 
  - count for time spent in state high and with events generated at random
@@ -9,12 +30,6 @@
  - random events with user supplied rng
  - random events
  - events Up, Down
-
-## next steps
-
- - optional internal events e.g. scheduler with restarts
-
-and at some point some logging and **testing**
 
 ## functions as states
 
