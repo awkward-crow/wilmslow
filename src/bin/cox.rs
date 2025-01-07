@@ -61,14 +61,29 @@ impl F {
         }
     }
 
+    fn is_running(self) -> bool {
+        let T(phi) = self.t;
+        phi == Self::running
+    }
+
     fn complete(&mut self, e: &E) -> (Option<E>, T) {
         println!("complete: {:?}", e);
         (None, T(Self::complete))
     }
 
+    fn is_complete(self) -> bool {
+        let T(phi) = self.t;
+        phi == Self::complete
+    }
+
     fn failed(&mut self, e: &E) -> (Option<E>, T) {
         println!("failed: {:?}", e);
         (None, T(Self::failed))
+    }
+
+    fn is_failed(self) -> bool {
+        let T(phi) = self.t;
+        phi == Self::failed
     }
 
     fn handle(&mut self, e: &E) -> bool {
@@ -81,6 +96,58 @@ impl F {
             true
         }
     }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn starts() {
+        let mut m = F { k: 0, t: T(F::init) };
+        assert_eq!(m.k, 0);
+        m.handle(&E::Start);
+        assert_eq!(m.k, 1)
+    }
+
+    #[test]
+    fn reach_running() {
+        let mut m = F { k: 0, t: T(F::init) };
+        m.handle(&E::Start);
+        m.handle(&E::Running);
+        assert!(m.is_running())
+    }
+
+    #[test]
+    fn reach_complete() {
+        let mut m = F { k: 0, t: T(F::init) };
+        m.handle(&E::Start);
+        m.handle(&E::Running);
+        m.handle(&E::Complete);
+        assert!(m.is_complete())
+    }
+
+    #[test]
+    fn restart() {
+        let mut m = F { k: 0, t: T(F::init) };
+        m.handle(&E::Start);
+        m.handle(&E::Running);
+        m.handle(&E::Failed);
+        assert_eq!(m.k, 2)
+    }
+
+    #[test]
+    fn reach_failed() {
+        let mut m = F { k: 0, t: T(F::init) };
+        m.handle(&E::Start);
+        for _ in 1..=MAX_STARTS {
+            m.handle(&E::Running);
+            m.handle(&E::Failed);
+        }
+        assert!(m.is_failed())
+    }
+
 }
 
 

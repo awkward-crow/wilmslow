@@ -2,6 +2,8 @@
 
 ## latest
 
+ - add testing to bin/cox.rs
+
  - state running goes back to init with a `start` event
  - states running, complete and failed
  - optional internal events i.e. transition functions are wrapped in struct T, 
@@ -18,8 +20,7 @@
 
 ## next steps (bin/cox.rs)
 
- - logging 
- - **testing**
+ - logging (?)
 
 ## previous (now bin/vanilla.rs)
 
