@@ -35,7 +35,6 @@ struct T (fn(&mut F, &E) -> (Option<E>, T));
 
 impl F {
     fn init(&mut self, e: &E) -> (Option<E>, T) {
-        println!("init: {:?}", e);
         match e {
             E::Start => {
                 self.k += 1;
@@ -53,7 +52,6 @@ impl F {
     }
 
     fn running(&mut self, e: &E) -> (Option<E>, T) {
-        println!("running: {:?}", e);
         match e {
             E::Failed => (Some(E::Start), T(Self::init)),
             E::Complete => (None, T(Self::complete)),
@@ -61,29 +59,46 @@ impl F {
         }
     }
 
-    fn is_running(self) -> bool {
+    fn is_init(&self) -> bool {
         let T(phi) = self.t;
-        phi == Self::running
+        std::ptr::fn_addr_eq(phi, Self::init as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
     }
 
-    fn complete(&mut self, e: &E) -> (Option<E>, T) {
-        println!("complete: {:?}", e);
-        (None, T(Self::complete))
-    }
-
-    fn is_complete(self) -> bool {
+    fn is_running(&self) -> bool {
         let T(phi) = self.t;
-        phi == Self::complete
+        std::ptr::fn_addr_eq(phi, Self::running as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
     }
 
-    fn failed(&mut self, e: &E) -> (Option<E>, T) {
-        println!("failed: {:?}", e);
-        (None, T(Self::failed))
+    fn complete(&mut self, _e: &E) -> (Option<E>, T) {
+(None, T(Self::complete))
     }
 
-    fn is_failed(self) -> bool {
+    fn is_complete(&self) -> bool {
         let T(phi) = self.t;
-        phi == Self::failed
+        std::ptr::fn_addr_eq(phi, Self::complete as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
+    }
+
+    fn failed(&mut self, _e: &E) -> (Option<E>, T) {
+(None, T(Self::failed))
+    }
+
+    fn is_failed(&self) -> bool {
+        let T(phi) = self.t;
+        std::ptr::fn_addr_eq(phi, Self::failed as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
+    }
+
+    fn state(&self) -> &str {
+        if self.is_running() {
+            "running"
+        } else if self.is_complete() {
+            "complete"
+        } else if self.is_failed() {
+            "failed"
+        } else if self.is_init() {
+            "init"
+        } else {
+            "unknown"
+        }
     }
 
     fn handle(&mut self, e: &E) -> bool {
@@ -155,10 +170,16 @@ fn main() {
     let mut m = F { k: 0, t: T(F::init) };
 
     for line in std::io::stdin().lines() {
-        let e = E::from_str(&line.unwrap());
+        let s = line.unwrap();
+        let e = E::from_str(&s);
         if let Ok(v) = e {
+            print!("{}({}) [{:?}]", m.state(), m.k, v);
             m.handle(&v);
+            println!(" -> {}({})", m.state(), m.k);
+        } else {
+            println!("{} - not recognised", s);
         }
+
     }
 
     println!("done");

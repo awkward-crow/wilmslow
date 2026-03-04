@@ -2,6 +2,13 @@
 
 ## latest
 
+ - pattern of interaction in cox changed to make it clearer; state transitions may be a bit skew-whiff (?)
+ - clippy does not like comparison of function pointers and prefers 
+
+        std::ptr::fn_addr_eq(phi, Self::terminal as for<'a, 'b> fn(&'a mut F, &'b E) -> T)
+
+   or similar!
+
  - add testing to bin/cox.rs
 
  - state running goes back to init with a `start` event
@@ -14,16 +21,13 @@
 
         fn init(&mut self, e: &E) -> (Option<E>, T) {
         
- - convert string (read from input) to enum value, `use std::str::FromStr;`
-
- - move previous main.rs to bin/vanilla.rs
-
 ## next steps (bin/cox.rs)
 
  - logging (?)
 
 ## previous (now bin/vanilla.rs)
 
+ - convert string (read from input) to enum value, `use std::str::FromStr;`
  - state: states -> &str
  - add terminal state and is_terminal() 
  - count for time spent in state high and with events generated at random
