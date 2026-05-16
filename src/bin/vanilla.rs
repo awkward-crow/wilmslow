@@ -1,9 +1,7 @@
 // vanilla.rs
 
-macro_rules! fn_eq {
-    ($a:expr, $b:expr) => {
-        std::ptr::fn_addr_eq($a as fn(&mut F, &E) -> T, $b as fn(&mut F, &E) -> T)
-    };
+fn fn_eq(a: fn(&mut F, &E) -> T, b: fn(&mut F, &E) -> T) -> bool {
+    std::ptr::fn_addr_eq(a, b)
 }
 
 #[derive(Debug)]
@@ -61,7 +59,7 @@ impl F {
 
     fn is_terminal(&self) -> bool {
         let T(phi) = self.t;
-        fn_eq!(phi, Self::terminal)
+        fn_eq(phi, Self::terminal)
     }
 
     fn handle(&mut self, e: &E) -> bool {
