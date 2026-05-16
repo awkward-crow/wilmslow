@@ -1,5 +1,11 @@
 // vanilla.rs
 
+macro_rules! fn_eq {
+    ($a:expr, $b:expr) => {
+        std::ptr::fn_addr_eq($a as fn(&mut F, &E) -> T, $b as fn(&mut F, &E) -> T)
+    };
+}
+
 #[derive(Debug)]
 enum E {
     Up,
@@ -55,7 +61,7 @@ impl F {
 
     fn is_terminal(&self) -> bool {
         let T(phi) = self.t;
-        std::ptr::fn_addr_eq(phi, Self::terminal as for<'a, 'b> fn(&'a mut F, &'b E) -> T)
+        fn_eq!(phi, Self::terminal)
     }
 
     fn handle(&mut self, e: &E) -> bool {

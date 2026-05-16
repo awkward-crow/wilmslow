@@ -1,5 +1,11 @@
 // cox.rs
 
+macro_rules! fn_eq {
+    ($a:expr, $b:expr) => {
+        std::ptr::fn_addr_eq($a as fn(&mut F, &E) -> (Option<E>, T), $b as fn(&mut F, &E) -> (Option<E>, T))
+    };
+}
+
 #[derive(Debug)]
 enum E {
     Start,
@@ -61,12 +67,12 @@ impl F {
 
     fn is_init(&self) -> bool {
         let T(phi) = self.t;
-        std::ptr::fn_addr_eq(phi, Self::init as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
+        fn_eq!(phi, Self::init)
     }
 
     fn is_running(&self) -> bool {
         let T(phi) = self.t;
-        std::ptr::fn_addr_eq(phi, Self::running as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
+        fn_eq!(phi, Self::running)
     }
 
     fn complete(&mut self, _e: &E) -> (Option<E>, T) {
@@ -75,7 +81,7 @@ impl F {
 
     fn is_complete(&self) -> bool {
         let T(phi) = self.t;
-        std::ptr::fn_addr_eq(phi, Self::complete as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
+        fn_eq!(phi, Self::complete)
     }
 
     fn failed(&mut self, _e: &E) -> (Option<E>, T) {
@@ -84,7 +90,7 @@ impl F {
 
     fn is_failed(&self) -> bool {
         let T(phi) = self.t;
-        std::ptr::fn_addr_eq(phi, Self::failed as for<'a, 'b> fn(&'a mut F, &'b E) -> (Option<E>, T))
+        fn_eq!(phi, Self::failed)
     }
 
     fn state(&self) -> &str {
