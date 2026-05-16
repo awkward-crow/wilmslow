@@ -2,6 +2,7 @@
 
 ## latest
 
+ - use a macro to handle function pointer comparison
  - pattern of interaction in cox changed to make it clearer; state transitions may be a bit skew-whiff (?)
  - clippy does not like comparison of function pointers and prefers 
 
